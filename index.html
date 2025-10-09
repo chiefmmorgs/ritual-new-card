@@ -1172,20 +1172,63 @@
       return rgbToHex(finalR, finalG, finalB);
     }
 
+    function generateAuraImage() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const width = 600;
+      const height = 800;
+      canvas.width = width;
+      canvas.height = height;
+      
+      // Get current aura colors from CSS variables
+      const auraEdge = getComputedStyle(document.documentElement).getPropertyValue('--aura-edge').trim();
+      const auraMixed = getComputedStyle(document.documentElement).getPropertyValue('--aura-mixed').trim();
+      
+      // Draw outer aura layer (layer-2 equivalent)
+      const gradient1 = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height)/1.5);
+      gradient1.addColorStop(0, 'transparent');
+      gradient1.addColorStop(0.4, 'transparent');
+      gradient1.addColorStop(0.75, auraEdge + '88'); // 50% opacity
+      gradient1.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient1;
+      ctx.fillRect(0, 0, width, height);
+      
+      // Draw inner aura layer (layer-1 equivalent)
+      const gradient2 = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height)/2);
+      gradient2.addColorStop(0, 'transparent');
+      gradient2.addColorStop(0.3, 'transparent');
+      gradient2.addColorStop(0.65, auraMixed + 'BB'); // 70% opacity
+      gradient2.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient2;
+      ctx.fillRect(0, 0, width, height);
+      
+      return canvas.toDataURL('image/png');
+    }
+
     async function captureCard() {
       try {
         cardExportWrapper.classList.add('paused');
+        
+        // Replace aura with static image for export
+        const cardAura = document.getElementById('cardAura');
+        const originalAuraHTML = cardAura.innerHTML;
+        const auraImageData = generateAuraImage();
+        
+        cardAura.innerHTML = `<img src="${auraImageData}" style="position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: fill; pointer-events: none;">`;
         
         const canvas = await html2canvas(cardExportWrapper, {
           scale: 2,
           useCORS: true,
           allowTaint: false,
           backgroundColor: null,
-          logging: true,
+          logging: false,
           imageTimeout: 15000
         });
         
+        // Restore original aura
+        cardAura.innerHTML = originalAuraHTML;
         cardExportWrapper.classList.remove('paused');
+        
         console.log('Canvas captured:', canvas.width, 'x', canvas.height);
         return canvas;
       } catch (err) {
