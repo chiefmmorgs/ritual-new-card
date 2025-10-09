@@ -261,8 +261,7 @@
       opacity: 1;
     }
 
-    .card-aura::before {
-      content: '';
+    .card-aura .aura-layer-1 {
       position: absolute;
       inset: -8px;
       border-radius: 28px;
@@ -277,8 +276,7 @@
       animation: cardBreathing 4s ease-in-out infinite;
     }
 
-    .card-aura::after {
-      content: '';
+    .card-aura .aura-layer-2 {
       position: absolute;
       inset: -16px;
       border-radius: 36px;
@@ -685,6 +683,12 @@
     .paused * {
       animation-play-state: paused !important;
     }
+
+    .paused .card-aura .aura-layer-1,
+    .paused .card-aura .aura-layer-2 {
+      animation: none !important;
+      opacity: 0.7 !important;
+    }
   </style>
 </head>
 <body>
@@ -761,7 +765,10 @@
 
         <div class="card-export-wrapper" id="cardExportWrapper">
           <div class="card-wrapper" id="cardWrapper">
-            <div class="card-aura" id="cardAura"></div>
+            <div class="card-aura" id="cardAura">
+              <div class="aura-layer-1"></div>
+              <div class="aura-layer-2"></div>
+            </div>
             
             <div class="aura-sparks" id="auraSparks">
               <div class="spark" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
