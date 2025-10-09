@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ritual Lab ID</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --core-base: #2E9D74;
+      --core-accent: #6FFFC2;
+      --core-bg: #0C1412;
+      --core-highlight: #6FFFC2;
+      --core-text: #f4e7c3;
+      --core-shadow: #0C1412;
+      --aura-edge: #00A9A6;
+      --aura-inner: #14C1BE;
+      --aura-core: #5EE5E2;
+      --aura-particle: #9FF0EE;
+      --pfp-highlight: #6FFFC2;
+      --aura-mixed: #00A9A6;
+      --logo-base: #6FFFC2;
+      --logo-aura: #6FFFC2;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1d23;
+      color: #e4e7eb;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6FFFC2;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .form-panel {
+      background: #23262d;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid #2d3139;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      background: #2d3139;
+      border: 1px solid #3d4149;
+      color: #e4e7eb;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: #6FFFC2;
+      box-shadow: 0 0 0 3px rgba(111, 255, 194, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #6b7280;
+    }
+
+    .upload-area {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .upload-btn {
+      background: #c4ff47;
+      color: #1a1d23;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .upload-btn:hover {
+      background: #d4ff67;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(196, 255, 71, 0.3);
+    }
+
+    .file-status {
+      color: #9ca3af;
+      font-size: 0.875rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #pfpInput {
+      display: none;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .action-btn {
+      flex: 1;
+      background: #c4ff47;
+      color: #1a1d23;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      background: #d4ff67;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(196, 255, 71, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: transparent;
+      color: #9ca3af;
+      border: 1px solid #3d4149;
+    }
+
+    .action-btn.secondary:hover {
+      background: #2d3139;
+      color: #e4e7eb;
+      box-shadow: none;
+    }
+
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .export-controls {
+      display: flex;
+      gap: 12px;
+    }
+
+    .export-btn {
+      background: #6FFFC2;
+      color: #1a1d23;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .export-btn:hover {
+      background: #8fffd2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(111, 255, 194, 0.3);
+    }
+
+    /* Export Wrapper - captures card + aura */
+    .card-export-wrapper {
+      position: relative;
+      padding: 48px;
+      display: inline-block;
+    }
+
+    .card-wrapper {
+      position: relative;
+    }
+
+    .card-aura {
+      position: absolute;
+      inset: -20px;
+      border-radius: 32px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1;
+    }
+
+    .card-aura.active {
+      opacity: 1;
+    }
+
+    .card-aura::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 28px;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        var(--aura-mixed) 65%,
+        transparent 100%
+      );
+      filter: blur(12px);
+      mix-blend-mode: screen;
+      animation: cardBreathing 4s ease-in-out infinite;
+    }
+
+    .card-aura::after {
+      content: '';
+      position: absolute;
+      inset: -16px;
+      border-radius: 36px;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 40%,
+        var(--aura-edge) 75%,
+        transparent 100%
+      );
+      filter: blur(20px);
+      opacity: 0.35;
+      mix-blend-mode: color-dodge;
+      animation: cardBreathing 4s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    @keyframes cardBreathing {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+      }
+    }
+
+    .card-aura.entering {
+      animation: auraCardEnter 1.2s ease-out;
+    }
+
+    @keyframes auraCardEnter {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .aura-sparks {
+      position: absolute;
+      inset: -12px;
+      border-radius: 32px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 2;
+    }
+
+    .aura-sparks.active {
+      opacity: 1;
+    }
+
+    .spark {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--aura-particle);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--aura-particle);
+      animation: sparkDrift 8s infinite ease-in-out;
+      opacity: 0.6;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes sparkDrift {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: translate(5px, -10px) scale(1.4);
+        opacity: 0.8;
+      }
+    }
+
+    .celestial-stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s;
+      z-index: 1;
+    }
+
+    .celestial-stars.active {
+      opacity: 1;
+    }
+
+    .star-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--core-highlight);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--core-highlight), 0 0 4px white;
+      animation: starDrift 12s infinite ease-in-out;
+      opacity: 0.8;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes starDrift {
+      0%, 100% { 
+        transform: translateY(0) scale(1);
+        opacity: 0.6;
+      }
+      50% { 
+        transform: translateY(-20px) scale(1.3);
+        opacity: 1;
+      }
+    }
+
+    .card-container {
+      perspective: 1000px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .id-card {
+      width: 380px;
+      background: radial-gradient(circle at 50% 60%, var(--core-base) 0%, var(--core-accent) 60%, var(--core-shadow) 100%);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7),
+                  0 0 40px var(--core-accent),
+                  inset 0 0 15px var(--core-highlight);
+      border: 1px solid var(--core-accent);
+      position: relative;
+      transition: background 0.8s, box-shadow 0.8s, border-color 0.8s;
+      transform-style: preserve-3d;
+      overflow: hidden;
+    }
+
+    .id-card.flipping {
+      animation: flip 1s ease-in-out;
+    }
+
+    @keyframes flip {
+      0% { transform: rotateY(0deg); }
+      50% { 
+        transform: rotateY(90deg);
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.9),
+                    0 0 60px var(--core-accent);
+      }
+      100% { transform: rotateY(0deg); }
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: rgba(26, 31, 43, 0.9);
+      border-radius: 10px;
+      margin-bottom: 5px;
+      border: 1px solid var(--core-base);
+      transition: border-color 0.8s, background 0.8s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .series-info {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Ritual Logo Badge */
+    .ritual-logo {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      filter: drop-shadow(0 0 8px var(--logo-aura));
+    }
+
+    .ritual-logo:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 12px var(--logo-aura));
+    }
+
+    .ritual-logo svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--logo-base);
+      transition: fill 0.8s;
+    }
+
+    .meter-bar {
+      height: 8px;
+      background: rgba(26, 31, 43, 0.8);
+      border-radius: 4px;
+      margin: 10px 0 20px;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--core-base), var(--core-accent));
+      width: 75%;
+      box-shadow: 0 0 10px var(--core-accent);
+      animation: shimmer 2s infinite;
+      transition: background 0.8s, box-shadow 0.8s;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .card-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+      position: relative;
+      z-index: 5;
+    }
+
+    .role-tab {
+      background: var(--core-base);
+      color: white;
+      padding: 8px 30px;
+      border-radius: 20px 20px 0 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      box-shadow: 0 -2px 10px var(--core-base);
+      transition: background 0.8s, box-shadow 0.8s, color 0.8s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .avatar-wrapper {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      margin-top: -10px;
+      z-index: 5;
+    }
+
+    .avatar-pfp {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(153, 163, 173, 0.2);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      background: linear-gradient(135deg, #1a1f2b, #2b3244);
+      transition: box-shadow 0.8s;
+      z-index: 2;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .name-band {
+      background: var(--core-base);
+      color: white;
+      padding: 12px 40px;
+      border-radius: 0 0 15px 15px;
+      font-weight: bold;
+      font-size: 1.3rem;
+      letter-spacing: 4px;
+      text-align: center;
+      margin-top: -10px;
+      box-shadow: 0 4px 15px var(--core-base);
+      transition: background 0.8s, box-shadow 0.8s, color 0.8s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .details {
+      background: rgba(26, 31, 43, 0.8);
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-left: 3px solid var(--core-accent);
+      transition: border-color 0.8s, background 0.8s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 0.9rem;
+    }
+
+    .detail-label {
+      color: var(--core-accent);
+      font-weight: 600;
+      transition: color 0.8s;
+    }
+
+    .detail-value {
+      color: var(--core-text);
+      transition: color 0.8s;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Serial Number Badge */
+    .serial-badge {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--core-base), var(--core-accent));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 4px 15px var(--core-base);
+      transition: background 0.8s, box-shadow 0.8s;
+      font-family: 'Courier New', monospace;
+    }
+
+    .serial-badge.reserving {
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    .harmonic-label {
+      background: rgba(26, 31, 43, 0.9);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      border: 2px solid var(--aura-edge);
+      box-shadow: 0 0 15px var(--aura-edge);
+      transition: border-color 0.3s, box-shadow 0.3s, color 0.3s;
+      color: var(--aura-particle);
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .id-card.flipping {
+        animation: crossFade 1s ease-in-out;
+      }
+
+      @keyframes crossFade {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .spark,
+      .star-particle {
+        animation: none;
+      }
+
+      .card-aura::before,
+      .card-aura::after {
+        animation: none !important;
+        opacity: 0.7 !important;
+        transform: none !important;
+      }
+    }
+
+    .paused * {
+      animation-play-state: paused !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="header-title">Ritual Lab ID Generator</h1>
+    </header>
+
+    <main class="main-content">
+      <div class="form-panel">
+        <div class="form-group">
+          <label class="form-label">NAME</label>
+          <input type="text" class="form-input" id="nameInput" placeholder="ritual" value="ritual">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">CORE ROLE</label>
+          <select class="form-select" id="coreRole">
+            <option value="ritualist">Ritualist</option>
+            <option value="mage">Mage</option>
+            <option value="ascendant">Ritualist Ascendant</option>
+            <option value="noderunner">Noderunner</option>
+            <option value="limbo">Limbo</option>
+            <option value="summoner">Summoner</option>
+            <option value="zealot">Zealot</option>
+            <option value="developer">Developer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">AURA ROLE</label>
+          <select class="form-select" id="auraRole">
+            <option value="harmonic">Harmonic</option>
+            <option value="cursed">Cursed</option>
+            <option value="blessed">Blessed</option>
+            <option value="initiate">Initiate</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">PORTFOLIO (OPTIONAL)</label>
+          <input type="text" class="form-input" id="portfolioInput" placeholder="Educator" value="Educator">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">DATE OF JOIN</label>
+          <input type="date" class="form-input" id="dateInput" value="2025-10-09">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">UPLOAD PHOTO</label>
+          <div class="upload-area">
+            <button class="upload-btn" onclick="document.getElementById('pfpInput').click()">
+              Choose file
+            </button>
+            <span class="file-status" id="fileStatus">No file chosen</span>
+            <input type="file" id="pfpInput" accept="image/png,image/jpeg,image/webp">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="action-btn" id="downloadBtn">DOWNLOAD PNG</button>
+          <button class="action-btn secondary" id="resetBtn">Reset</button>
+          <button class="action-btn secondary">Export 2× Sheet</button>
+        </div>
+      </div>
+
+      <div class="preview-panel">
+        <div class="export-controls">
+          <button class="export-btn" id="copyBtn">📋 Copy Card</button>
+        </div>
+
+        <div class="card-export-wrapper" id="cardExportWrapper">
+          <div class="card-wrapper" id="cardWrapper">
+            <div class="card-aura" id="cardAura"></div>
+            
+            <div class="aura-sparks" id="auraSparks">
+              <div class="spark" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+              <div class="spark" style="top: 85%; left: 20%; animation-delay: 2s;"></div>
+              <div class="spark" style="top: 30%; left: 90%; animation-delay: 4s;"></div>
+              <div class="spark" style="top: 70%; left: 85%; animation-delay: 6s;"></div>
+              <div class="spark" style="top: 50%; left: 5%; animation-delay: 3s;"></div>
+              <div class="spark" style="top: 20%; right: 10%; animation-delay: 5s;"></div>
+            </div>
+
+            <div class="card-container">
+              <div class="id-card" id="idCard">
+                <div class="celestial-stars" id="celestialStars">
+                  <div class="star-particle" style="left: 15%; top: 20%; animation-delay: 0s;"></div>
+                  <div class="star-particle" style="left: 85%; top: 30%; animation-delay: 3s;"></div>
+                  <div class="star-particle" style="left: 25%; top: 70%; animation-delay: 6s;"></div>
+                  <div class="star-particle" style="left: 75%; top: 80%; animation-delay: 9s;"></div>
+                  <div class="star-particle" style="left: 50%; top: 15%; animation-delay: 4s;"></div>
+                  <div class="star-particle" style="left: 90%; top: 60%; animation-delay: 7s;"></div>
+                  <div class="star-particle" style="left: 10%; top: 50%; animation-delay: 2s;"></div>
+                  <div class="star-particle" style="left: 60%; top: 90%; animation-delay: 5s;"></div>
+                </div>
+
+                <div class="card-top">
+                  <div class="series-info">
+                    2025-RITUAL LAB1<br>
+                    <span style="font-size: 0.65rem; opacity: 0.7;" id="statusText">HARMONIC</span>
+                  </div>
+                  <div class="ritual-logo" title="Ritual emblem">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M50,10 L60,20 L50,30 L60,40 L50,50 L40,40 L50,30 L40,20 Z M50,50 L60,60 L50,70 L60,80 L50,90 L40,80 L50,70 L40,60 Z M30,30 L40,40 L30,50 L20,40 Z M70,30 L80,40 L70,50 L60,40 Z M30,50 L40,60 L30,70 L20,60 Z M70,50 L80,60 L70,70 L60,60 Z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="meter-bar">
+                  <div class="meter-fill"></div>
+                </div>
+
+                <div class="card-center">
+                  <div class="role-tab" id="roleTab">RITUALIST</div>
+                  
+                  <div class="avatar-wrapper">
+                    <div class="avatar-pfp">
+                      <div class="avatar" id="avatarIcon">🧙</div>
+                    </div>
+                  </div>
+                  
+                  <div class="name-band" id="nameBand">RITUAL</div>
+                </div>
+
+                <div class="details">
+                  <div class="detail-row">
+                    <span class="detail-label">Role:</span>
+                    <span class="detail-value" id="roleDisplay">Ritualist</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" id="statusDisplay">harmonic • PLEDGED</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Joined:</span>
+                    <span class="detail-value" id="joinedDate">2025-10-09</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Title:</span>
+                    <span class="detail-value" id="titleDisplay">Educator</span>
+                  </div>
+                </div>
+
+                <div class="card-bottom">
+                  <div class="serial-badge" id="leftSerial">0001</div>
+                  <div class="harmonic-label" id="harmonicLabel">HARMONIC</div>
+                  <div class="serial-badge" id="rightSerial">0001</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    const coreRoles = {
+      ritualist: { name: 'Ritualist', base: '#2E9D74', accent: '#6FFFC2', highlight: '#6FFFC2', text: '#f4e7c3', shadow: '#0C1412', bg: '#0C1412', icon: '🧙', celestial: false },
+      mage: { name: 'Mage', base: '#6243FF', accent: '#9B8AFF', highlight: '#9B8AFF', text: '#f4e7c3', shadow: '#100C2B', bg: '#100C2B', icon: '🔮', celestial: false },
+      ascendant: { name: 'Ritualist Ascendant', base: '#C0B7FF', accent: '#9C73FF', highlight: '#E7E4FF', text: '#0E071F', shadow: '#3C2B5F', bg: '#1C1400', icon: '✨', celestial: true },
+      noderunner: { name: 'Noderunner', base: '#00B2FF', accent: '#39E1FF', highlight: '#39E1FF', text: '#f4e7c3', shadow: '#001018', bg: '#001018', icon: '⚡', celestial: false },
+      limbo: { name: 'Limbo', base: '#4A4A4A', accent: '#8C8C8C', highlight: '#8C8C8C', text: '#f4e7c3', shadow: '#000000', bg: '#000000', icon: '👻', celestial: false },
+      summoner: { name: 'Summoner', base: '#FF6B6B', accent: '#FF9B9B', highlight: '#FF9B9B', text: '#f4e7c3', shadow: '#1A0000', bg: '#1A0000', icon: '🔥', celestial: false },
+      zealot: { name: 'Zealot', base: '#E4572E', accent: '#FFB04D', highlight: '#FFB04D', text: '#f4e7c3', shadow: '#1C0900', bg: '#1C0900', icon: '⚔️', celestial: false },
+      developer: { name: 'Developer', base: '#2786E1', accent: '#7BD6FF', highlight: '#7BD6FF', text: '#f4e7c3', shadow: '#0B1624', bg: '#0B1624', icon: '💻', celestial: false }
+    };
+
+    const auraRoles = {
+      harmonic: { name: 'Harmonic', edge: '#00A9A6', inner: '#14C1BE', core: '#5EE5E2', particle: '#9FF0EE' },
+      cursed: { name: 'Cursed', edge: '#8A00FF', inner: '#A020F0', core: '#C77DFF', particle: '#FF00AA' },
+      blessed: { name: 'Blessed', edge: '#E2A400', inner: '#FFD24A', core: '#FFF1B3', particle: '#FFC766' },
+      initiate: { name: 'Initiate', edge: 'transparent', inner: 'transparent', core: 'transparent', particle: 'transparent', noAura: true }
+    };
+
+    const idCard = document.getElementById('idCard');
+    const cardAura = document.getElementById('cardAura');
+    const auraSparks = document.getElementById('auraSparks');
+    const celestialStars = document.getElementById('celestialStars');
+    const cardWrapper = document.getElementById('cardWrapper');
+    const cardExportWrapper = document.getElementById('cardExportWrapper');
+    const coreRoleSelect = document.getElementById('coreRole');
+    const auraRoleSelect = document.getElementById('auraRole');
+    const nameInput = document.getElementById('nameInput');
+    const nameBand = document.getElementById('nameBand');
+    const roleDisplay = document.getElementById('roleDisplay');
+    const roleTab = document.getElementById('roleTab');
+    const statusText = document.getElementById('statusText');
+    const statusDisplay = document.getElementById('statusDisplay');
+    const harmonicLabel = document.getElementById('harmonicLabel');
+    const avatarIcon = document.getElementById('avatarIcon');
+    const pfpInput = document.getElementById('pfpInput');
+    const fileStatus = document.getElementById('fileStatus');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const portfolioInput = document.getElementById('portfolioInput');
+    const titleDisplay = document.getElementById('titleDisplay');
+    const dateInput = document.getElementById('dateInput');
+    const joinedDate = document.getElementById('joinedDate');
+    const leftSerial = document.getElementById('leftSerial');
+    const rightSerial = document.getElementById('rightSerial');
+
+    let isFlipping = false;
+    let currentPfpDataUrl = null;
+    let currentPfpHighlight = null;
+    let currentSerial = null;
+
+    function getNextSerial() {
+      let serial = parseInt(localStorage.getItem('ritualCardSerial') || '0');
+      serial++;
+      localStorage.setItem('ritualCardSerial', serial.toString());
+      return serial;
+    }
+
+    function formatSerial(num) {
+      return String(num).padStart(4, '0');
+    }
+
+    function reserveSerial() {
+      leftSerial.classList.add('reserving');
+      rightSerial.classList.add('reserving');
+      leftSerial.textContent = '...';
+      rightSerial.textContent = '...';
+
+      setTimeout(() => {
+        const serial = getNextSerial();
+        currentSerial = serial;
+        const formatted = formatSerial(serial);
+        leftSerial.textContent = formatted;
+        rightSerial.textContent = formatted;
+        leftSerial.classList.remove('reserving');
+        rightSerial.classList.remove('reserving');
+        saveState();
+      }, 500);
+    }
+
+    function mixColors(auraColor, pfpColor, pfpWeight = 0.2) {
+      if (!pfpColor || auraColor === 'transparent') return auraColor;
+      const auraRgb = hexToRgb(auraColor);
+      const pfpRgb = hexToRgb(pfpColor);
+      const r = Math.round(auraRgb.r * (1 - pfpWeight) + pfpRgb.r * pfpWeight);
+      const g = Math.round(auraRgb.g * (1 - pfpWeight) + pfpRgb.g * pfpWeight);
+      const b = Math.round(auraRgb.b * (1 - pfpWeight) + pfpRgb.b * pfpWeight);
+      return rgbToHex(r, g, b);
+    }
+
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : { r: 0, g: 0, b: 0 };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function loadSavedState() {
+      const saved = localStorage.getItem('ritualCardState');
+      if (saved) {
+        const state = JSON.parse(saved);
+        if (state.name) nameInput.value = state.name;
+        if (state.coreRole) coreRoleSelect.value = state.coreRole;
+        if (state.auraRole) auraRoleSelect.value = state.auraRole;
+        if (state.portfolio) portfolioInput.value = state.portfolio;
+        if (state.dateOfJoin) dateInput.value = state.dateOfJoin;
+        if (state.serial) {
+          currentSerial = state.serial;
+          const formatted = formatSerial(state.serial);
+          leftSerial.textContent = formatted;
+          rightSerial.textContent = formatted;
+        }
+        if (state.pfpDataUrl) {
+          currentPfpDataUrl = state.pfpDataUrl;
+          avatarIcon.innerHTML = `<img src="${state.pfpDataUrl}" alt="Avatar" crossorigin="anonymous">`;
+          fileStatus.textContent = 'Photo uploaded';
+        }
+        if (state.pfpHighlight) {
+          currentPfpHighlight = state.pfpHighlight;
+        }
+        
+        updateCard();
+        applyTheme(coreRoleSelect.value, auraRoleSelect.value);
+        
+        const aura = auraRoles[auraRoleSelect.value];
+        if (!aura.noAura) {
+          cardAura.classList.add('active');
+          auraSparks.classList.add('active');
+        }
+      } else {
+        reserveSerial();
+      }
+    }
+
+    function saveState() {
+      const state = {
+        name: nameInput.value,
+        coreRole: coreRoleSelect.value,
+        auraRole: auraRoleSelect.value,
+        portfolio: portfolioInput.value,
+        dateOfJoin: dateInput.value,
+        serial: currentSerial,
+        pfpDataUrl: currentPfpDataUrl,
+        pfpHighlight: currentPfpHighlight,
+        createdAt: new Date().toISOString()
+      };
+      localStorage.setItem('ritualCardState', JSON.stringify(state));
+    }
+
+    function updateCard() {
+      nameBand.textContent = nameInput.value.toUpperCase() || 'RITUAL';
+      titleDisplay.textContent = portfolioInput.value || 'Educator';
+      joinedDate.textContent = dateInput.value || '2025-10-09';
+    }
+
+    function applyTheme(coreKey, auraKey) {
+      const core = coreRoles[coreKey];
+      const aura = auraRoles[auraKey];
+
+      const mixedAuraColor = mixColors(aura.edge, currentPfpHighlight, 0.2);
+      const logoAuraColor = aura.noAura ? core.accent : mixColors(aura.edge, core.accent, 0.2);
+
+      document.documentElement.style.setProperty('--core-base', core.base);
+      document.documentElement.style.setProperty('--core-accent', core.accent);
+      document.documentElement.style.setProperty('--core-highlight', core.highlight);
+      document.documentElement.style.setProperty('--core-text', core.text);
+      document.documentElement.style.setProperty('--core-shadow', core.shadow);
+      document.documentElement.style.setProperty('--core-bg', core.bg);
+      document.documentElement.style.setProperty('--aura-edge', aura.edge);
+      document.documentElement.style.setProperty('--aura-inner', aura.inner || aura.edge);
+      document.documentElement.style.setProperty('--aura-core', aura.core || aura.edge);
+      document.documentElement.style.setProperty('--aura-particle', aura.particle);
+      document.documentElement.style.setProperty('--aura-mixed', mixedAuraColor);
+      document.documentElement.style.setProperty('--logo-base', core.accent);
+      document.documentElement.style.setProperty('--logo-aura', logoAuraColor);
+      
+      if (currentPfpHighlight) {
+        document.documentElement.style.setProperty('--pfp-highlight', currentPfpHighlight);
+      }
+
+      if (core.celestial) {
+        celestialStars.classList.add('active');
+      } else {
+        celestialStars.classList.remove('active');
+      }
+
+      roleDisplay.textContent = core.name;
+      roleTab.textContent = core.name.toUpperCase();
+      
+      if (!currentPfpDataUrl) {
+        avatarIcon.textContent = core.icon;
+      }
+
+      if (aura.noAura) {
+        cardAura.classList.remove('active', 'entering');
+        auraSparks.classList.remove('active');
+      }
+    }
+
+    function extractDominantColor(imageData) {
+      const data = imageData.data;
+      const colorCounts = {};
+
+      for (let i = 0; i < data.length; i += 40) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        
+        if (data[i + 3] < 128) continue;
+        if (Math.abs(r - g) < 30 && Math.abs(g - b) < 30 && Math.abs(r - b) < 30) continue;
+        if (r > 180 && g > 120 && b > 80 && r > b && r > g) continue;
+        
+        const key = `${Math.floor(r/10)*10},${Math.floor(g/10)*10},${Math.floor(b/10)*10}`;
+        colorCounts[key] = (colorCounts[key] || 0) + 1;
+      }
+
+      let maxCount = 0;
+      let dominantColor = null;
+      for (const [color, count] of Object.entries(colorCounts)) {
+        if (count > maxCount) {
+          maxCount = count;
+          dominantColor = color;
+        }
+      }
+
+      if (!dominantColor) return '#6FFFC2';
+
+      const [r, g, b] = dominantColor.split(',').map(Number);
+      const rNorm = r / 255;
+      const gNorm = g / 255;
+      const bNorm = b / 255;
+      const max = Math.max(rNorm, gNorm, bNorm);
+      const min = Math.min(rNorm, gNorm, bNorm);
+      let l = (max + min) / 2;
+
+      let h, s;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case rNorm: h = ((gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0)) / 6; break;
+          case gNorm: h = ((bNorm - rNorm) / d + 2) / 6; break;
+          case bNorm: h = ((rNorm - gNorm) / d + 4) / 6; break;
+        }
+      }
+
+      if (l < 0.3) l += 0.2;
+      else if (l < 0.4) l += 0.15;
+      s = Math.min(1, s * 1.2);
+
+      const hslToRgb = (h, s, l) => {
+        let r, g, b;
+        if (s === 0) {
+          r = g = b = l;
+        } else {
+          const hue2rgb = (p, q, t) => {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+          };
+          const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+          const p = 2 * l - q;
+          r = hue2rgb(p, q, h + 1/3);
+          g = hue2rgb(p, q, h);
+          b = hue2rgb(p, q, h - 1/3);
+        }
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+      };
+
+      const [finalR, finalG, finalB] = hslToRgb(h, s, l);
+      return rgbToHex(finalR, finalG, finalB);
+    }
+
+    async function captureCard() {
+      try {
+        cardExportWrapper.classList.add('paused');
+        
+        const canvas = await html2canvas(cardExportWrapper, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          logging: false,
+          imageTimeout: 0,
+          removeContainer: true
+        });
+        
+        cardExportWrapper.classList.remove('paused');
+        return canvas;
+      } catch (err) {
+        cardExportWrapper.classList.remove('paused');
+        throw err;
+      }
+    }
+
+    async function copyCard() {
+      try {
+        if (!currentSerial) {
+          alert('Please wait for serial number reservation...');
+          return;
+        }
+        
+        copyBtn.textContent = '⏳ Copying...';
+        const canvas = await captureCard();
+        
+        canvas.toBlob(async (blob) => {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            copyBtn.textContent = '✅ Copied!';
+            setTimeout(() => {
+              copyBtn.innerHTML = '📋 Copy Card';
+            }, 2000);
+          } catch (err) {
+            console.error('Clipboard failed:', err);
+            downloadCard();
+            copyBtn.innerHTML = '📋 Copy Card';
+          }
+        });
+      } catch (err) {
+        console.error('Capture failed:', err);
+        copyBtn.innerHTML = '📋 Copy Card';
+        alert('Copy failed. Try download instead.');
+      }
+    }
+
+    async function downloadCard() {
+      try {
+        if (!currentSerial) {
+          alert('Please wait for serial number reservation...');
+          return;
+        }
+        
+        downloadBtn.textContent = '⏳ Saving...';
+        const canvas = await captureCard();
+        
+        const filename = `ritual-id_${formatSerial(currentSerial)}.png`;
+        
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+          
+          downloadBtn.textContent = '✅ Saved!';
+          setTimeout(() => {
+            downloadBtn.innerHTML = 'DOWNLOAD PNG';
+          }, 2000);
+        });
+      } catch (err) {
+        console.error('Download failed:', err);
+        downloadBtn.innerHTML = 'DOWNLOAD PNG';
+        alert('Download failed. Please try again.');
+      }
+    }
+
+    function resetForm() {
+      nameInput.value = 'ritual';
+      coreRoleSelect.value = 'ritualist';
+      auraRoleSelect.value = 'harmonic';
+      portfolioInput.value = 'Educator';
+      dateInput.value = '2025-10-09';
+      currentPfpDataUrl = null;
+      currentPfpHighlight = null;
+      avatarIcon.innerHTML = '🧙';
+      fileStatus.textContent = 'No file chosen';
+      reserveSerial();
+      updateCard();
+      applyTheme('ritualist', 'harmonic');
+      cardAura.classList.add('active');
+      auraSparks.classList.add('active');
+      saveState();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && !e.shiftKey) {
+        const selection = window.getSelection();
+        if (!selection || selection.toString().length === 0) {
+          e.preventDefault();
+          copyCard();
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        downloadCard();
+      }
+    });
+
+    copyBtn.addEventListener('click', copyCard);
+    downloadBtn.addEventListener('click', downloadCard);
+    resetBtn.addEventListener('click', resetForm);
+
+    nameInput.addEventListener('input', () => {
+      updateCard();
+      saveState();
+    });
+
+    portfolioInput.addEventListener('input', () => {
+      updateCard();
+      saveState();
+    });
+
+    dateInput.addEventListener('change', () => {
+      updateCard();
+      saveState();
+    });
+
+    pfpInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      fileStatus.textContent = 'Processing...';
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = 512;
+          canvas.height = 512;
+
+          const size = Math.min(img.width, img.height);
+          const x = (img.width - size) / 2;
+          const y = (img.height - size) / 2;
+          ctx.drawImage(img, x, y, size, size, 0, 0, 512, 512);
+
+          const imageData = ctx.getImageData(0, 0, 512, 512);
+          const dominantColor = extractDominantColor(imageData);
+          
+          const dataUrl = canvas.toDataURL('image/png');
+          currentPfpDataUrl = dataUrl;
+          currentPfpHighlight = dominantColor;
+
+          avatarIcon.innerHTML = `<img src="${dataUrl}" alt="Avatar" crossorigin="anonymous">`;
+          fileStatus.textContent = file.name;
+          
+          applyTheme(coreRoleSelect.value, auraRoleSelect.value);
+          saveState();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    coreRoleSelect.addEventListener('change', (e) => {
+      if (isFlipping) return;
+      
+      isFlipping = true;
+      const newRole = e.target.value;
+      const currentAura = auraRoleSelect.value;
+      
+      idCard.classList.add('flipping');
+      
+      setTimeout(() => {
+        applyTheme(newRole, currentAura);
+      }, 500);
+
+      setTimeout(() => {
+        idCard.classList.remove('flipping');
+        isFlipping = false;
+        
+        const aura = auraRoles[currentAura];
+        if (!aura.noAura && !cardAura.classList.contains('active')) {
+          cardAura.classList.add('active');
+          auraSparks.classList.add('active');
+        }
+        
+        saveState();
+      }, 1000);
+    });
+
+    auraRoleSelect.addEventListener('change', (e) => {
+      const newAura = e.target.value;
+      const currentCore = coreRoleSelect.value;
+      
+      applyTheme(currentCore, newAura);
+      
+      const aura = auraRoles[newAura];
+      harmonicLabel.textContent = aura.name.toUpperCase();
+      statusText.textContent = aura.name.toUpperCase();
+      statusDisplay.textContent = `${aura.name.toLowerCase()} • PLEDGED`;
+      
+      if (aura.noAura) {
+        cardAura.classList.remove('active', 'entering');
+        auraSparks.classList.remove('active');
+      } else {
+        const wasActive = cardAura.classList.contains('active');
+        
+        if (!wasActive) {
+          cardAura.classList.add('entering', 'active');
+          auraSparks.classList.add('active');
+          
+          setTimeout(() => {
+            cardAura.classList.remove('entering');
+          }, 1200);
+        } else {
+          cardAura.classList.add('active');
+          auraSparks.classList.add('active');
+        }
+      }
+      
+      saveState();
+    });
+
+    loadSavedState();
+    updateCard();
+  </script>
+</body>
+</html>
