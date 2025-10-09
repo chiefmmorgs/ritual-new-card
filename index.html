@@ -691,7 +691,7 @@
   <div class="container">
     <header class="header">
       <div class="header-logo" id="headerLogo">
-        <img src="attached_assets/image_1760027732283.png" alt="Ritual Logo">
+        <img src="attached_assets/image_1760027732283.png" alt="Ritual Logo" crossorigin="anonymous">
       </div>
       <h1 class="header-title">Ritual Lab ID Generator</h1>
     </header>
@@ -791,7 +791,7 @@
                     <span style="font-size: 0.65rem; opacity: 0.7;" id="statusText">HARMONIC</span>
                   </div>
                   <div class="ritual-logo" title="Ritual emblem">
-                    <img src="attached_assets/image_1760026647735.png" alt="Ritual Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    <img src="attached_assets/image_1760026647735.png" alt="Ritual Logo" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain;">
                   </div>
                 </div>
 
@@ -1170,27 +1170,19 @@
         cardExportWrapper.classList.add('paused');
         
         const canvas = await html2canvas(cardExportWrapper, {
-          scale: 3,
+          scale: 2,
           useCORS: true,
-          allowTaint: true,
-          backgroundColor: 'transparent',
-          logging: false,
-          imageTimeout: 0,
-          removeContainer: false,
-          foreignObjectRendering: true,
-          width: cardExportWrapper.offsetWidth,
-          height: cardExportWrapper.offsetHeight,
-          x: 0,
-          y: 0,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: cardExportWrapper.offsetWidth,
-          windowHeight: cardExportWrapper.offsetHeight
+          allowTaint: false,
+          backgroundColor: null,
+          logging: true,
+          imageTimeout: 15000
         });
         
         cardExportWrapper.classList.remove('paused');
+        console.log('Canvas captured:', canvas.width, 'x', canvas.height);
         return canvas;
       } catch (err) {
+        console.error('html2canvas error:', err);
         cardExportWrapper.classList.remove('paused');
         throw err;
       }
