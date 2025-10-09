@@ -1170,13 +1170,22 @@
         cardExportWrapper.classList.add('paused');
         
         const canvas = await html2canvas(cardExportWrapper, {
-          scale: 2,
+          scale: 3,
           useCORS: true,
-          allowTaint: false,
-          backgroundColor: null,
+          allowTaint: true,
+          backgroundColor: 'transparent',
           logging: false,
           imageTimeout: 0,
-          removeContainer: true
+          removeContainer: false,
+          foreignObjectRendering: true,
+          width: cardExportWrapper.offsetWidth,
+          height: cardExportWrapper.offsetHeight,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: cardExportWrapper.offsetWidth,
+          windowHeight: cardExportWrapper.offsetHeight
         });
         
         cardExportWrapper.classList.remove('paused');
@@ -1189,15 +1198,16 @@
 
     async function copyCard() {
       try {
-        if (!currentSerial) {
-          alert('Please wait for serial number reservation...');
-          return;
-        }
-        
         copyBtn.textContent = '⏳ Copying...';
         const canvas = await captureCard();
         
         canvas.toBlob(async (blob) => {
+          if (!blob) {
+            copyBtn.innerHTML = '📋 Copy Card';
+            alert('Failed to create image. Please try download instead.');
+            return;
+          }
+          
           try {
             await navigator.clipboard.write([
               new ClipboardItem({ 'image/png': blob })
@@ -1208,10 +1218,10 @@
             }, 2000);
           } catch (err) {
             console.error('Clipboard failed:', err);
-            downloadCard();
             copyBtn.innerHTML = '📋 Copy Card';
+            alert('Clipboard access denied. Use download instead.');
           }
-        });
+        }, 'image/png');
       } catch (err) {
         console.error('Capture failed:', err);
         copyBtn.innerHTML = '📋 Copy Card';
@@ -1221,17 +1231,19 @@
 
     async function downloadCard() {
       try {
-        if (!currentSerial) {
-          alert('Please wait for serial number reservation...');
-          return;
-        }
-        
         downloadBtn.textContent = '⏳ Saving...';
         const canvas = await captureCard();
         
-        const filename = `ritual-id_${formatSerial(currentSerial)}.png`;
+        const timestamp = new Date().getTime();
+        const filename = `ritual-id_${timestamp}.png`;
         
         canvas.toBlob((blob) => {
+          if (!blob) {
+            downloadBtn.innerHTML = 'DOWNLOAD PNG';
+            alert('Failed to create image. Please try again.');
+            return;
+          }
+          
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -1243,7 +1255,7 @@
           setTimeout(() => {
             downloadBtn.innerHTML = 'DOWNLOAD PNG';
           }, 2000);
-        });
+        }, 'image/png');
       } catch (err) {
         console.error('Download failed:', err);
         downloadBtn.innerHTML = 'DOWNLOAD PNG';
