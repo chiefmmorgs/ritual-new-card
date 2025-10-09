@@ -1216,6 +1216,28 @@
         
         cardAura.innerHTML = `<img src="${auraImageData}" style="position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); object-fit: fill; pointer-events: none;">`;
         
+        // Add logo glow for export
+        const ritualLogo = document.querySelector('.ritual-logo');
+        const logoAuraColor = getComputedStyle(document.documentElement).getPropertyValue('--logo-aura').trim();
+        const originalLogoStyle = ritualLogo.style.cssText;
+        
+        // Create a glow element behind the logo
+        const logoGlow = document.createElement('div');
+        logoGlow.id = 'temp-logo-glow';
+        logoGlow.style.cssText = `
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          transform: translateY(-50%);
+          width: 60px;
+          height: 60px;
+          background: radial-gradient(circle, ${logoAuraColor} 0%, ${logoAuraColor}88 40%, transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9;
+        `;
+        document.querySelector('.card-top').appendChild(logoGlow);
+        
         const canvas = await html2canvas(cardExportWrapper, {
           scale: 2,
           useCORS: true,
@@ -1225,8 +1247,12 @@
           imageTimeout: 15000
         });
         
-        // Restore original aura
+        // Restore original aura and remove logo glow
         cardAura.innerHTML = originalAuraHTML;
+        ritualLogo.style.cssText = originalLogoStyle;
+        const tempGlow = document.getElementById('temp-logo-glow');
+        if (tempGlow) tempGlow.remove();
+        
         cardExportWrapper.classList.remove('paused');
         
         console.log('Canvas captured:', canvas.width, 'x', canvas.height);
