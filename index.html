@@ -1209,21 +1209,28 @@
       try {
         cardExportWrapper.classList.add('paused');
         
+        // Temporarily set wrapper background to transparent for export
+        const originalBg = cardExportWrapper.style.backgroundColor;
+        cardExportWrapper.style.backgroundColor = 'transparent';
+        
         const canvas = await html2canvas(cardExportWrapper, {
           scale: 2,
           useCORS: true,
           allowTaint: false,
-          backgroundColor: null,
+          backgroundColor: 'transparent',
           logging: false,
           imageTimeout: 15000
         });
         
+        // Restore original background
+        cardExportWrapper.style.backgroundColor = originalBg;
         cardExportWrapper.classList.remove('paused');
         
         console.log('Canvas captured:', canvas.width, 'x', canvas.height);
         return canvas;
       } catch (err) {
         console.error('html2canvas error:', err);
+        cardExportWrapper.style.backgroundColor = originalBg;
         cardExportWrapper.classList.remove('paused');
         throw err;
       }
