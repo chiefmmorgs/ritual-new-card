@@ -239,7 +239,7 @@
     /* Export Wrapper - captures card + aura */
     .card-export-wrapper {
       position: relative;
-      padding: 0;
+      padding: 24px;
       display: inline-block;
     }
 
@@ -1209,11 +1209,12 @@
       try {
         cardExportWrapper.classList.add('paused');
         
+        // Use dark background for better social media appearance
         const canvas = await html2canvas(cardExportWrapper, {
           scale: 2,
           useCORS: true,
           allowTaint: false,
-          backgroundColor: null,
+          backgroundColor: '#1a1d23',
           logging: false,
           imageTimeout: 15000
         });
