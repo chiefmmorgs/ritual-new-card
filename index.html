@@ -1209,15 +1209,15 @@
       try {
         cardExportWrapper.classList.add('paused');
         
-        // Temporarily set wrapper background to transparent for export
+        // Use dark background color for social media compatibility
         const originalBg = cardExportWrapper.style.backgroundColor;
-        cardExportWrapper.style.backgroundColor = 'transparent';
+        cardExportWrapper.style.backgroundColor = '#15202b'; // Twitter/X dark theme color
         
         const canvas = await html2canvas(cardExportWrapper, {
           scale: 2,
           useCORS: true,
           allowTaint: false,
-          backgroundColor: 'transparent',
+          backgroundColor: '#15202b',
           logging: false,
           imageTimeout: 15000
         });
