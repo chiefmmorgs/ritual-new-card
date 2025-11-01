@@ -23,4 +23,5 @@ A single-page web application for creating customizable Ritual Lab ID cards. Use
 - No build process required
 
 ## Recent Changes
+- 2025-11-01: Updated core role names (Developer → RittyBitty, Summoner → Radiant Ritualist, Zealot → Ritty)
 - 2025-10-09: Initial setup in Replit environment
